@@ -1,7 +1,7 @@
 import Scroll from './Scroll';
 
-export default Scroll;
-
 export {
   Scroll,
 }
+
+export default Scroll;

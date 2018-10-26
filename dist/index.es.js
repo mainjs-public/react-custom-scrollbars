@@ -1,8 +1,4 @@
-'use strict';
-
-Object.defineProperty(exports, '__esModule', { value: true });
-
-var React = require('react');
+import { createRef, createElement, Component } from 'react';
 
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
@@ -172,7 +168,7 @@ function (_React$Component) {
       status: false,
       positionDown: 0
     };
-    _this.content = React.createRef();
+    _this.content = createRef();
     _this.onWheel = _this.onWheel.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     return _this;
   }
@@ -217,7 +213,7 @@ function (_React$Component) {
       var row = [];
 
       for (var i = 0; i < 100; i++) {
-        row.push(React.createElement("div", {
+        row.push(createElement("div", {
           className: "row",
           key: i
         }, i));
@@ -229,22 +225,22 @@ function (_React$Component) {
       var height = this.props.height;
       var scroolHeight = height * height / contentHeight; // console.log(scroolHeight, 'scroolHeight');
 
-      return React.createElement("div", null, React.createElement("div", {
+      return createElement("div", null, createElement("div", {
         className: "container",
         onWheel: this.onWheel,
         style: {
           height: height
         }
-      }, React.createElement("div", {
+      }, createElement("div", {
         className: "content",
         style: {
           top: -this.getBackTop()
         },
         ref: this.content
-      }, row), React.createElement("div", {
+      }, row), createElement("div", {
         className: "scrollbar",
         onMouseMove: this.onMouseMove
-      }, React.createElement("div", {
+      }, createElement("div", {
         className: "scroll",
         onMouseDown: this.onMouseDown,
         onMouseUp: this.onMouseUp,
@@ -258,11 +254,11 @@ function (_React$Component) {
   }]);
 
   return Scroll;
-}(React.Component);
+}(Component);
 
 Scroll.defaultProps = {
   height: 700
 };
 
-exports.Scroll = Scroll;
-exports.default = Scroll;
+export default Scroll;
+export { Scroll };
