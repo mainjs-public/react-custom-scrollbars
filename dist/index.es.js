@@ -119,12 +119,34 @@ var Scroll =
 function (_React$Component) {
   _inherits(Scroll, _React$Component);
 
-  function Scroll(props, context) {
+  function Scroll(props) {
     var _this;
 
     _classCallCheck(this, Scroll);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(Scroll).call(this, props, context));
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(Scroll).call(this, props));
+
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "content", void 0);
+
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "onWheel", function (e) {
+      if (e.deltaY < 0) {
+        _this.setState(function (state) {
+          return {
+            top: state.top - 5
+          };
+        });
+      }
+
+      if (e.deltaY > 0) {
+        _this.setState(function (state) {
+          return {
+            top: state.top + 5
+          };
+        });
+      }
+
+      _this.setScrollDefault();
+    });
 
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "setScrollDefault", function () {
       var _this$state = _this.state,
@@ -199,36 +221,13 @@ function (_React$Component) {
       positionDown: 0
     };
     _this.content = createRef();
-    _this.onWheel = _this.onWheel.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     return _this;
   }
 
   _createClass(Scroll, [{
-    key: "onWheel",
-    value: function onWheel(e) {
-      if (e.deltaY < 0) {
-        this.setState(function (state) {
-          return {
-            top: state.top - 5
-          };
-        });
-      }
-
-      if (e.deltaY > 0) {
-        this.setState(function (state) {
-          return {
-            top: state.top + 5
-          };
-        });
-      }
-
-      this.setScrollDefault();
-    }
-  }, {
     key: "componentDidMount",
     value: function componentDidMount() {
-      this.setState({
-        contentHeight: this.content.current.clientHeight
+      this.setState({// contentHeight: this.content.current.clientHeight
       });
     }
   }, {
@@ -255,7 +254,7 @@ function (_React$Component) {
       var height = this.props.height;
       var scroolHeight = height * height / contentHeight; // console.log(scroolHeight, 'scroolHeight');
 
-      return createElement("div", null, "111", createElement("div", {
+      return createElement("div", null, createElement("div", {
         className: "container",
         onWheel: this.onWheel,
         style: {
@@ -286,8 +285,8 @@ function (_React$Component) {
   return Scroll;
 }(Component);
 
-Scroll.defaultProps = {
+_defineProperty(Scroll, "defaultProps", {
   height: 700
-};
+});
 
 export { Scroll };

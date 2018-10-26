@@ -1,10 +1,29 @@
-import * as React from 'react';
+// @flow
 
+import * as React from 'react';
 import './scroll.scss';
 
-class Scroll extends React.Component {
-  constructor(props, context) {
-    super(props, context);
+type Props = {
+  height: number,
+};
+
+type State = {
+  top: number,
+  contentHeight: number,
+  status: boolean,
+  positionDown: number,
+};
+
+class Scroll extends React.Component<Props, State> {
+
+  static defaultProps = {
+    height: 700
+  };
+
+  content: { current: null | HTMLDivElement };
+
+  constructor(props: any) {
+    super(props);
     this.state = {
       top: 0,
       contentHeight: 10,
@@ -12,10 +31,9 @@ class Scroll extends React.Component {
       positionDown: 0
     };
     this.content = React.createRef();
-    this.onWheel = this.onWheel.bind(this);
   }
 
-  onWheel(e) {
+  onWheel = (e: SyntheticWheelEvent<HTMLDivElement>) => {
     if (e.deltaY < 0) {
       this.setState((state) => {
         return {top: state.top - 5}
@@ -48,7 +66,7 @@ class Scroll extends React.Component {
 
   componentDidMount() {
     this.setState({
-      contentHeight: this.content.current.clientHeight
+      // contentHeight: this.content.current.clientHeight
     });
   }
 
@@ -59,7 +77,7 @@ class Scroll extends React.Component {
     return backTop;
   }
 
-  onMouseDown = (e) => {
+  onMouseDown = (e: SyntheticMouseEvent<HTMLDivElement>) => {
     console.log(e.screenY, 'onMouseDown')
     this.setState({
       status: true,
@@ -68,7 +86,7 @@ class Scroll extends React.Component {
 
   }
 
-  onMouseUp = (e) => {
+  onMouseUp = (e: SyntheticMouseEvent<HTMLDivElement>) => {
     console.log(e.screenY, 'onMouseoUp')
     this.setState({
       status: false
@@ -82,7 +100,7 @@ class Scroll extends React.Component {
     });
   }
 
-  onMouseMove = (e) => {
+  onMouseMove = (e: SyntheticMouseEvent<HTMLDivElement>) => {
     const { top, status } = this.state;
     console.log(e.screenY)
     if(status) {
@@ -110,7 +128,6 @@ class Scroll extends React.Component {
     // console.log(scroolHeight, 'scroolHeight');
     return (
       <div>
-        111
         <div className="container" onWheel={this.onWheel} style={{ height: height }}>
           <div className="content" style={{ top: -this.getBackTop()}} ref={this.content}>
             {row}
@@ -133,9 +150,5 @@ class Scroll extends React.Component {
     );
   }
 }
-
-Scroll.defaultProps = {
-  height: 700
-};
 
 export default Scroll;
