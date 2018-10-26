@@ -1,152 +1,150 @@
 // @flow
 
-import * as React from 'react';
-import './scroll.scss';
+import * as React from "react";
+import "./scroll.scss";
 
 type Props = {
-  height: number,
+  height: number
 };
 
 type State = {
   top: number,
-  contentHeight: number,
-  status: boolean,
-  positionDown: number,
+  height: number,
+  start: number,
+  scrolling: boolean
 };
 
 class Scroll extends React.Component<Props, State> {
-
   static defaultProps = {
-    height: 700
+    height: 300
   };
 
-  content: { current: null | HTMLDivElement };
+  state = {
+    top: 0,
+    height: 30,
+    scrolling: false,
+    start: 0
+  };
+
+  content: { current: {} | HTMLDivElement };
+  container: { current: {} | HTMLDivElement };
+  scroll: { current: {} | HTMLDivElement };
 
   constructor(props: any) {
     super(props);
-    this.state = {
-      top: 0,
-      contentHeight: 10,
-      status: false,
-      positionDown: 0
-    };
+
     this.content = React.createRef();
-  }
+    this.container = React.createRef();
+    this.scroll = React.createRef();
 
-  onWheel = (e: SyntheticWheelEvent<HTMLDivElement>) => {
-    if (e.deltaY < 0) {
-      this.setState((state) => {
-        return {top: state.top - 5}
-      });
-    }
-    if (e.deltaY > 0) {
-      this.setState((state) => {
-        return {top: state.top + 5}
-      });
-    }
-    this.setScrollDefault();
-  }
-
-  setScrollDefault = () => {
-    const { contentHeight, top } = this.state;
-    const { height } = this.props;
-    const scroolHeight = (height*height) / contentHeight;
-    if(top > height-scroolHeight) {
-      this.setState({
-        top: height-scroolHeight
-      });
-    }
-
-    if(top < 0) {
-      this.setState({
-        top: 0
-      });
-    }
+    this.onMove = this.onMove.bind(this);
+    this.handleMouseDown = this.handleMouseDown.bind(this);
   }
 
   componentDidMount() {
+    this.handleScroll();
+  }
+
+  handleScroll = () => {
+    const content = this.content.current;
+    const container = this.container.current;
+
     this.setState({
-      // contentHeight: this.content.current.clientHeight
+      height:
+        (container.clientHeight * content.clientHeight) / content.scrollHeight,
+      top: (container.clientHeight * content.scrollTop) / content.scrollHeight
     });
-  }
+  };
 
-  getBackTop = () => {
-    const { contentHeight, top } = this.state;
-    const { height } = this.props;
-    const backTop = top/height*contentHeight;
-    return backTop;
-  }
+  handleMouseDown(e) {
+    e.preventDefault();
 
-  onMouseDown = (e: SyntheticMouseEvent<HTMLDivElement>) => {
-    console.log(e.screenY, 'onMouseDown')
-    this.setState({
-      status: true,
-      positionDown: e.screenY
-    });
+    const scroll = this.scroll.current;
 
-  }
-
-  onMouseUp = (e: SyntheticMouseEvent<HTMLDivElement>) => {
-    console.log(e.screenY, 'onMouseoUp')
-    this.setState({
-      status: false
-    }, () => {
-      if(this.state.top <= 0) {
-        this.setState({
-          top: 0,
-          status: false
-        });
+    this.setState(
+      {
+        start: e.pageY,
+        y: scroll.offsetTop
+      },
+      () => {
+        window.addEventListener("mousemove", this.onMove, false);
+        window.addEventListener(
+          "mouseup",
+          () => {
+            window.removeEventListener("mousemove", this.onMove, false);
+          },
+          false
+        );
       }
+    );
+  }
+
+  onMove(e) {
+    const { start, y } = this.state;
+
+    const content = this.content.current;
+    const container = this.container.current;
+    const scroll = this.scroll.current;
+
+    const delta = e.pageY - start;
+
+    const top = Math.min(
+      container.clientHeight - scroll.clientHeight,
+      Math.max(0, y + delta)
+    );
+
+    this.setState({
+      top
     });
-  }
 
-  onMouseMove = (e: SyntheticMouseEvent<HTMLDivElement>) => {
-    const { top, status } = this.state;
-    console.log(e.screenY)
-    if(status) {
-      this.setState({
-        top: e.screenY
-      });
-    }
+    content.scrollTop =
+      (content.scrollHeight * scroll.offsetTop) / container.clientHeight;
   }
-
-  // onMouseLeave = () => {
-  //   this.setState({
-  //     status: false
-  //   });
-  // }
 
   render() {
-    console.log(this.state.positionDown)
-    const row = [];
-    for (let i = 0; i< 100; i++) {
-      row.push(<div className="row" key={i}>{i}</div>);
-    }
-    const { contentHeight, top } = this.state;
-    const { height } = this.props;
-    const scroolHeight = (height*height) / contentHeight;
-    // console.log(scroolHeight, 'scroolHeight');
-    return (
-      <div>
-        <div className="container" onWheel={this.onWheel} style={{ height: height }}>
-          <div className="content" style={{ top: -this.getBackTop()}} ref={this.content}>
-            {row}
-          </div>
-          <div className="scrollbar"
-            onMouseMove = {this.onMouseMove}
-          >
-            <div
-              className="scroll"
-              onMouseDown = {this.onMouseDown}
-              onMouseUp = {this.onMouseUp}
-              onMouseMove = {this.onMouseMove}
+    const { height: heightContainer } = this.props;
+    const { height, top } = this.state;
 
-              style={{ top, height: scroolHeight }}
-            >
+    return (
+      <section>
+        <h1>Custom scrollbar</h1>
+        <article>
+          <div id="container" style={{ height: heightContainer }}>
+            <div id="scrollbar-container" ref={this.container}>
+              <div
+                id="scrollbar"
+                style={{ height, top }}
+                ref={this.scroll}
+                onMouseDown={this.handleMouseDown}
+              />
+            </div>
+            <div id="content" onScroll={this.handleScroll} ref={this.content}>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent
+              libero lacus, lobortis congue purus hendrerit, pharetra dictum
+              metus. Vestibulum ante ipsum primis in faucibus orci luctus et
+              ultrices posuere cubilia Curae; Phasellus in elit vel nisl
+              condimentum tincidunt eget quis turpis. Aliquam porta placerat
+              nisl vitae interdum. Ut nibh lorem, mollis sit amet diam a,
+              ultrices tincidunt felis. Duis tincidunt, mauris convallis
+              interdum suscipit, dui elit ultrices elit, et rhoncus nunc lacus a
+              odio. Morbi quis egestas nisl. Etiam vestibulum felis vitae felis
+              lobortis, sit amet interdum neque congue. Curabitur est augue,
+              imperdiet ullamcorper diam ac, suscipit auctor orci. Donec id ex
+              eget eros volutpat tempor. Vivamus pretium sagittis quam vel
+              malesuada. In hac habitasse platea dictumst. Maecenas consequat
+              imperdiet lacus, at faucibus mauris posuere ac. Pellentesque a
+              tellus dolor. Ut ante nisi, sagittis quis varius eu, luctus
+              aliquet elit. Nunc vel ullamcorper mauris. Duis scelerisque tempor
+              velit, eget euismod arcu ultrices nec. Nulla facilisi.
+              Pellentesque ullamcorper tellus vitae sapien dapibus venenatis.
+              Phasellus eget nunc ornare, aliquet nulla eu, lacinia metus.
+              Maecenas maximus porta feugiat. Pellentesque finibus nulla orci,
+              non pulvinar libero finibus vitae. Pellentesque bibendum vehicula
+              arcu vitae dignissim. Aliquam tempor nisl id porttitor venenatis.
             </div>
           </div>
-        </div>
-      </div>
+        </article>
+      </section>
     );
   }
 }

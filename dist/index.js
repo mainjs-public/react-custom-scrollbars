@@ -115,7 +115,7 @@ function styleInject(css, ref) {
   }
 }
 
-var css = ".container {\n  width: 500px;\n  position: relative;\n  height: 600px;\n  background-color: #29f0ed;\n  overflow: hidden; }\n  .container .scrollbar {\n    position: absolute;\n    right: 0;\n    width: 10px;\n    height: 100%;\n    background-color: #222; }\n    .container .scrollbar .scroll {\n      position: absolute;\n      right: 0;\n      width: 10px;\n      height: 20px;\n      background-color: red;\n      cursor: pointer; }\n  .container .content {\n    margin-right: 10px;\n    position: absolute;\n    left: 0;\n    right: 10px; }\n\n.row {\n  padding: 10px; }\n";
+var css = "body {\n  font-family: cursive;\n  background: #eef; }\n\nh1 {\n  text-align: center; }\n\n#container {\n  width: 300px;\n  box-sizing: border-box;\n  max-width: 100%;\n  padding: 5px 10px;\n  margin: auto;\n  background: #ccc;\n  position: relative; }\n\n#content {\n  height: 100%;\n  width: 100%;\n  overflow-y: scroll; }\n\n#scrollbar-container {\n  position: absolute;\n  right: 5px;\n  bottom: 5px;\n  top: 5px;\n  width: 20px; }\n\n#scrollbar {\n  position: absolute;\n  right: 0;\n  height: 30px;\n  width: 10px;\n  border-radius: 10px;\n  background: rgba(0, 0, 0, 0.5); }\n\n::-webkit-scrollbar {\n  display: none; }\n";
 styleInject(css);
 
 var Scroll =
@@ -130,159 +130,103 @@ function (_React$Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Scroll).call(this, props));
 
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "state", {
+      top: 0,
+      height: 30,
+      scrolling: false,
+      start: 0
+    });
+
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "content", void 0);
 
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "onWheel", function (e) {
-      if (e.deltaY < 0) {
-        _this.setState(function (state) {
-          return {
-            top: state.top - 5
-          };
-        });
-      }
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "container", void 0);
 
-      if (e.deltaY > 0) {
-        _this.setState(function (state) {
-          return {
-            top: state.top + 5
-          };
-        });
-      }
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "scroll", void 0);
 
-      _this.setScrollDefault();
-    });
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "setScrollDefault", function () {
-      var _this$state = _this.state,
-          contentHeight = _this$state.contentHeight,
-          top = _this$state.top;
-      var height = _this.props.height;
-      var scroolHeight = height * height / contentHeight;
-
-      if (top > height - scroolHeight) {
-        _this.setState({
-          top: height - scroolHeight
-        });
-      }
-
-      if (top < 0) {
-        _this.setState({
-          top: 0
-        });
-      }
-    });
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "getBackTop", function () {
-      var _this$state2 = _this.state,
-          contentHeight = _this$state2.contentHeight,
-          top = _this$state2.top;
-      var height = _this.props.height;
-      var backTop = top / height * contentHeight;
-      return backTop;
-    });
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "onMouseDown", function (e) {
-      console.log(e.screenY, 'onMouseDown');
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "handleScroll", function () {
+      var content = _this.content.current;
+      var container = _this.container.current;
 
       _this.setState({
-        status: true,
-        positionDown: e.screenY
+        height: container.clientHeight * content.clientHeight / content.scrollHeight,
+        top: container.clientHeight * content.scrollTop / content.scrollHeight
       });
     });
 
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "onMouseUp", function (e) {
-      console.log(e.screenY, 'onMouseoUp');
-
-      _this.setState({
-        status: false
-      }, function () {
-        if (_this.state.top <= 0) {
-          _this.setState({
-            top: 0,
-            status: false
-          });
-        }
-      });
-    });
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "onMouseMove", function (e) {
-      var _this$state3 = _this.state,
-          top = _this$state3.top,
-          status = _this$state3.status;
-      console.log(e.screenY);
-
-      if (status) {
-        _this.setState({
-          top: e.screenY
-        });
-      }
-    });
-
-    _this.state = {
-      top: 0,
-      contentHeight: 10,
-      status: false,
-      positionDown: 0
-    };
     _this.content = React.createRef();
+    _this.container = React.createRef();
+    _this.scroll = React.createRef();
+    _this.onMove = _this.onMove.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    _this.handleMouseDown = _this.handleMouseDown.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     return _this;
   }
 
   _createClass(Scroll, [{
     key: "componentDidMount",
     value: function componentDidMount() {
-      this.setState({// contentHeight: this.content.current.clientHeight
+      this.handleScroll();
+    }
+  }, {
+    key: "handleMouseDown",
+    value: function handleMouseDown(e) {
+      var _this2 = this;
+
+      e.preventDefault();
+      var scroll = this.scroll.current;
+      this.setState({
+        start: e.pageY,
+        y: scroll.offsetTop
+      }, function () {
+        window.addEventListener("mousemove", _this2.onMove, false);
+        window.addEventListener("mouseup", function () {
+          window.removeEventListener("mousemove", _this2.onMove, false);
+        }, false);
       });
     }
   }, {
+    key: "onMove",
+    value: function onMove(e) {
+      var _this$state = this.state,
+          start = _this$state.start,
+          y = _this$state.y;
+      var content = this.content.current;
+      var container = this.container.current;
+      var scroll = this.scroll.current;
+      var delta = e.pageY - start;
+      var top = Math.min(container.clientHeight - scroll.clientHeight, Math.max(0, y + delta));
+      this.setState({
+        top: top
+      });
+      content.scrollTop = content.scrollHeight * scroll.offsetTop / container.clientHeight;
+    }
+  }, {
     key: "render",
-    // onMouseLeave = () => {
-    //   this.setState({
-    //     status: false
-    //   });
-    // }
     value: function render() {
-      console.log(this.state.positionDown);
-      var row = [];
-
-      for (var i = 0; i < 100; i++) {
-        row.push(React.createElement("div", {
-          className: "row",
-          key: i
-        }, i));
-      }
-
-      var _this$state4 = this.state,
-          contentHeight = _this$state4.contentHeight,
-          top = _this$state4.top;
-      var height = this.props.height;
-      var scroolHeight = height * height / contentHeight; // console.log(scroolHeight, 'scroolHeight');
-
-      return React.createElement("div", null, React.createElement("div", {
-        className: "container",
-        onWheel: this.onWheel,
+      var heightContainer = this.props.height;
+      var _this$state2 = this.state,
+          height = _this$state2.height,
+          top = _this$state2.top;
+      return React.createElement("section", null, React.createElement("h1", null, "Custom scrollbar"), React.createElement("article", null, React.createElement("div", {
+        id: "container",
         style: {
-          height: height
+          height: heightContainer
         }
       }, React.createElement("div", {
-        className: "content",
+        id: "scrollbar-container",
+        ref: this.container
+      }, React.createElement("div", {
+        id: "scrollbar",
         style: {
-          top: -this.getBackTop()
+          height: height,
+          top: top
         },
+        ref: this.scroll,
+        onMouseDown: this.handleMouseDown
+      })), React.createElement("div", {
+        id: "content",
+        onScroll: this.handleScroll,
         ref: this.content
-      }, row), React.createElement("div", {
-        className: "scrollbar",
-        onMouseMove: this.onMouseMove
-      }, React.createElement("div", {
-        className: "scroll",
-        onMouseDown: this.onMouseDown,
-        onMouseUp: this.onMouseUp,
-        onMouseMove: this.onMouseMove,
-        style: {
-          top: top,
-          height: scroolHeight
-        }
-      }))));
+      }, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent libero lacus, lobortis congue purus hendrerit, pharetra dictum metus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Phasellus in elit vel nisl condimentum tincidunt eget quis turpis. Aliquam porta placerat nisl vitae interdum. Ut nibh lorem, mollis sit amet diam a, ultrices tincidunt felis. Duis tincidunt, mauris convallis interdum suscipit, dui elit ultrices elit, et rhoncus nunc lacus a odio. Morbi quis egestas nisl. Etiam vestibulum felis vitae felis lobortis, sit amet interdum neque congue. Curabitur est augue, imperdiet ullamcorper diam ac, suscipit auctor orci. Donec id ex eget eros volutpat tempor. Vivamus pretium sagittis quam vel malesuada. In hac habitasse platea dictumst. Maecenas consequat imperdiet lacus, at faucibus mauris posuere ac. Pellentesque a tellus dolor. Ut ante nisi, sagittis quis varius eu, luctus aliquet elit. Nunc vel ullamcorper mauris. Duis scelerisque tempor velit, eget euismod arcu ultrices nec. Nulla facilisi. Pellentesque ullamcorper tellus vitae sapien dapibus venenatis. Phasellus eget nunc ornare, aliquet nulla eu, lacinia metus. Maecenas maximus porta feugiat. Pellentesque finibus nulla orci, non pulvinar libero finibus vitae. Pellentesque bibendum vehicula arcu vitae dignissim. Aliquam tempor nisl id porttitor venenatis."))));
     }
   }]);
 
@@ -290,7 +234,7 @@ function (_React$Component) {
 }(React.Component);
 
 _defineProperty(Scroll, "defaultProps", {
-  height: 700
+  height: 300
 });
 
 exports.Scroll = Scroll;
