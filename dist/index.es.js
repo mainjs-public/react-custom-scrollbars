@@ -84,6 +84,36 @@ function _possibleConstructorReturn(self, call) {
   return _assertThisInitialized(self);
 }
 
+function styleInject(css, ref) {
+  if ( ref === void 0 ) ref = {};
+  var insertAt = ref.insertAt;
+
+  if (!css || typeof document === 'undefined') { return; }
+
+  var head = document.head || document.getElementsByTagName('head')[0];
+  var style = document.createElement('style');
+  style.type = 'text/css';
+
+  if (insertAt === 'top') {
+    if (head.firstChild) {
+      head.insertBefore(style, head.firstChild);
+    } else {
+      head.appendChild(style);
+    }
+  } else {
+    head.appendChild(style);
+  }
+
+  if (style.styleSheet) {
+    style.styleSheet.cssText = css;
+  } else {
+    style.appendChild(document.createTextNode(css));
+  }
+}
+
+var css = ".container {\n  width: 500px;\n  position: relative;\n  height: 600px;\n  background-color: #29f0ed;\n  overflow: hidden; }\n  .container .scrollbar {\n    position: absolute;\n    right: 0;\n    width: 10px;\n    height: 100%;\n    background-color: #222; }\n    .container .scrollbar .scroll {\n      position: absolute;\n      right: 0;\n      width: 10px;\n      height: 20px;\n      background-color: red;\n      cursor: pointer; }\n  .container .content {\n    margin-right: 10px;\n    position: absolute;\n    left: 0;\n    right: 10px; }\n\n.row {\n  padding: 10px; }\n";
+styleInject(css);
+
 var Scroll =
 /*#__PURE__*/
 function (_React$Component) {
@@ -225,7 +255,7 @@ function (_React$Component) {
       var height = this.props.height;
       var scroolHeight = height * height / contentHeight; // console.log(scroolHeight, 'scroolHeight');
 
-      return createElement("div", null, createElement("div", {
+      return createElement("div", null, "111", createElement("div", {
         className: "container",
         onWheel: this.onWheel,
         style: {
@@ -260,5 +290,4 @@ Scroll.defaultProps = {
   height: 700
 };
 
-export default Scroll;
 export { Scroll };
