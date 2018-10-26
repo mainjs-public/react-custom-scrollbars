@@ -1,9 +1,8 @@
-import React, {Component} from 'react';
-import PropTypes from 'prop-types';
+import * as React from 'react';
 
-import './scrool.scss';
+import './scroll.scss';
 
-class Scroll extends Component {
+class Scroll extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
@@ -118,8 +117,8 @@ class Scroll extends Component {
           <div className="scrollbar"
             onMouseMove = {this.onMouseMove}
           >
-            <div 
-              className="scroll" 
+            <div
+              className="scroll"
               onMouseDown = {this.onMouseDown}
               onMouseUp = {this.onMouseUp}
               onMouseMove = {this.onMouseMove}
@@ -134,12 +133,8 @@ class Scroll extends Component {
   }
 }
 
-Scroll.propTypes = {
-  height: PropTypes.number.isRequired
-};
-
 Scroll.defaultProps = {
   height: 700
-}
+};
 
 export default Scroll;

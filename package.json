@@ -1,0 +1,43 @@
+{
+  "name": "@mainjs/react-custom-scrollbars",
+  "version": "18.10.0",
+  "description": "Custom scrollbar",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "webpack --mode production",
+    "flow": "flow"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mainjs-public/react-custom-scrollbars.git"
+  },
+  "keywords": [
+    "React",
+    "scroll",
+    "custom"
+  ],
+  "author": "MAINJS",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mainjs-public/react-custom-scrollbars/issues"
+  },
+  "homepage": "https://github.com/mainjs-public/react-custom-scrollbars#readme",
+  "devDependencies": {
+    "@babel/core": "^7.1.2",
+    "@babel/plugin-proposal-class-properties": "^7.1.0",
+    "@babel/preset-env": "^7.1.0",
+    "@babel/preset-flow": "^7.0.0",
+    "@babel/preset-react": "^7.0.0",
+    "babel-loader": "^8.0.4",
+    "clean-webpack-plugin": "^0.1.19",
+    "css-loader": "^1.0.0",
+    "mini-css-extract-plugin": "^0.4.4",
+    "node-sass": "^4.9.4",
+    "react": "^16.6.0",
+    "react-dom": "^16.6.0",
+    "sass-loader": "^7.1.0",
+    "style-loader": "^0.23.1",
+    "webpack": "^4.23.1",
+    "webpack-cli": "^3.1.2"
+  }
+}
