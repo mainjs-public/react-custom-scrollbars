@@ -21,7 +21,9 @@ export default {
   external: ['react', 'react-dom'],
   plugins: [
     resolve(),
-    postcss(),
+    postcss({
+      modules: true
+    }),
     babel({
       exclude: 'node_modules/**' // only transpile our source code
     }),

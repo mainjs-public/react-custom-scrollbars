@@ -1,11 +1,4 @@
-body {
-  font-family: cursive;
-  background: #eef;
-}
-h1 {
-  text-align: center;
-}
-#container {
+.container {
   width: 300px;
   box-sizing:border-box;
   max-width:100%;
@@ -14,12 +7,12 @@ h1 {
   background: #ccc;
   position: relative;
 }
-#content {
+.content {
   height:100%;
   width: 100%;
   overflow-y: scroll;
 }
-#scrollbar-container {
+.scrollbarContainer {
   position: absolute;
   right: 5px;
   bottom: 5px;
@@ -27,7 +20,7 @@ h1 {
   width: 20px;
 }
 
-#scrollbar {
+.scrollbar {
   position: absolute;
   right: 0;
   height: 30px;

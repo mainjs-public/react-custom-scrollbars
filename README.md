@@ -14,7 +14,7 @@ render() {
 }
 ```
 
-## Sound as a component?
+## React Custom Scrollbars as a component?
 
 Yes! It's really easy to custom scroll in your app as part of the component tree in your React app.
 
@@ -28,11 +28,11 @@ Yes! It's really easy to custom scroll in your app as part of the component tree
 
 ```js
 var React = require('react');
-var { Scroll } = require('@mainjs/react-custom-scrollbars').default;
+var Scroll = require('@mainjs/react-custom-scrollbars').default;
 
 // ... or using import:
 import React from 'react';
-import Sound from '@mainjs/react-custom-scrollbars';
+import { Scroll } from '@mainjs/react-custom-scrollbars';
 
 class MyComponentWithSound extends React.Component {
   render() {

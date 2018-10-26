@@ -111,7 +111,8 @@ function styleInject(css, ref) {
   }
 }
 
-var css = "body {\n  font-family: cursive;\n  background: #eef; }\n\nh1 {\n  text-align: center; }\n\n#container {\n  width: 300px;\n  box-sizing: border-box;\n  max-width: 100%;\n  padding: 5px 10px;\n  margin: auto;\n  background: #ccc;\n  position: relative; }\n\n#content {\n  height: 100%;\n  width: 100%;\n  overflow-y: scroll; }\n\n#scrollbar-container {\n  position: absolute;\n  right: 5px;\n  bottom: 5px;\n  top: 5px;\n  width: 20px; }\n\n#scrollbar {\n  position: absolute;\n  right: 0;\n  height: 30px;\n  width: 10px;\n  border-radius: 10px;\n  background: rgba(0, 0, 0, 0.5); }\n\n::-webkit-scrollbar {\n  display: none; }\n";
+var css = ".scroll_container__2ZFIl {\n  width: 300px;\n  box-sizing:border-box;\n  max-width:100%;\n  padding: 5px 10px;\n  margin: auto;\n  background: #ccc;\n  position: relative;\n}\n.scroll_content__dfsgC {\n  height:100%;\n  width: 100%;\n  overflow-y: scroll;\n}\n.scroll_scrollbarContainer__2KZyQ {\n  position: absolute;\n  right: 5px;\n  bottom: 5px;\n  top: 5px;\n  width: 20px;\n}\n\n.scroll_scrollbar__2hZu6 {\n  position: absolute;\n  right: 0;\n  height: 30px;\n  width: 10px;\n  border-radius: 10px;\n  background: rgba(0, 0, 0, 0.5);\n}\n\n::-webkit-scrollbar {\n  display: none;\n}\n";
+var style = {"container":"scroll_container__2ZFIl","content":"scroll_content__dfsgC","scrollbarContainer":"scroll_scrollbarContainer__2KZyQ","scrollbar":"scroll_scrollbar__2hZu6"};
 styleInject(css);
 
 var Scroll =
@@ -129,8 +130,8 @@ function (_React$Component) {
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "state", {
       top: 0,
       height: 30,
-      scrolling: false,
-      start: 0
+      start: 0,
+      y: 0
     });
 
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "content", void 0);
@@ -202,16 +203,16 @@ function (_React$Component) {
       var _this$state2 = this.state,
           height = _this$state2.height,
           top = _this$state2.top;
-      return createElement("section", null, createElement("h1", null, "Custom scrollbar"), createElement("article", null, createElement("div", {
-        id: "container",
+      return createElement("div", {
+        className: style.container,
         style: {
           height: heightContainer
         }
       }, createElement("div", {
-        id: "scrollbar-container",
+        className: style.scrollbarContainer,
         ref: this.container
       }, createElement("div", {
-        id: "scrollbar",
+        className: style.scrollbar,
         style: {
           height: height,
           top: top
@@ -219,10 +220,10 @@ function (_React$Component) {
         ref: this.scroll,
         onMouseDown: this.handleMouseDown
       })), createElement("div", {
-        id: "content",
+        className: style.content,
         onScroll: this.handleScroll,
         ref: this.content
-      }, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent libero lacus, lobortis congue purus hendrerit, pharetra dictum metus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Phasellus in elit vel nisl condimentum tincidunt eget quis turpis. Aliquam porta placerat nisl vitae interdum. Ut nibh lorem, mollis sit amet diam a, ultrices tincidunt felis. Duis tincidunt, mauris convallis interdum suscipit, dui elit ultrices elit, et rhoncus nunc lacus a odio. Morbi quis egestas nisl. Etiam vestibulum felis vitae felis lobortis, sit amet interdum neque congue. Curabitur est augue, imperdiet ullamcorper diam ac, suscipit auctor orci. Donec id ex eget eros volutpat tempor. Vivamus pretium sagittis quam vel malesuada. In hac habitasse platea dictumst. Maecenas consequat imperdiet lacus, at faucibus mauris posuere ac. Pellentesque a tellus dolor. Ut ante nisi, sagittis quis varius eu, luctus aliquet elit. Nunc vel ullamcorper mauris. Duis scelerisque tempor velit, eget euismod arcu ultrices nec. Nulla facilisi. Pellentesque ullamcorper tellus vitae sapien dapibus venenatis. Phasellus eget nunc ornare, aliquet nulla eu, lacinia metus. Maecenas maximus porta feugiat. Pellentesque finibus nulla orci, non pulvinar libero finibus vitae. Pellentesque bibendum vehicula arcu vitae dignissim. Aliquam tempor nisl id porttitor venenatis."))));
+      }, this.props.children));
     }
   }]);
 
