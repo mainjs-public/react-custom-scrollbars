@@ -1,0 +1,32 @@
+.container {
+    width: 500px;
+    position: relative;
+    height: 600px;
+    background-color: #29f0ed;
+    overflow: hidden;
+    .scrollbar {
+      position: absolute;
+      right: 0;
+      width: 10px;
+      height: 100%;
+      background-color: #222;
+      .scroll {
+        position: absolute;
+        right: 0;
+        width: 10px;
+        height: 20px;
+        background-color: red;
+        cursor: pointer;
+      }
+    }
+    .content {
+      margin-right: 10px;
+      position: absolute;
+      left: 0;
+      right: 10px;
+    }
+  }
+  
+  .row {
+    padding: 10px;
+  }
