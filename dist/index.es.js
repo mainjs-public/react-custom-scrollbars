@@ -111,7 +111,7 @@ function styleInject(css, ref) {
   }
 }
 
-var css = ".scroll_container__2ZFIl {\n  width: 300px;\n  box-sizing:border-box;\n  max-width:100%;\n  padding: 5px 10px;\n  margin: auto;\n  background: #ccc;\n  position: relative;\n}\n.scroll_content__dfsgC {\n  height:100%;\n  width: 100%;\n  overflow-y: scroll;\n}\n.scroll_scrollbarContainer__2KZyQ {\n  position: absolute;\n  right: 5px;\n  bottom: 5px;\n  top: 5px;\n  width: 20px;\n}\n\n.scroll_scrollbar__2hZu6 {\n  position: absolute;\n  right: 0;\n  height: 30px;\n  width: 10px;\n  border-radius: 10px;\n  background: rgba(0, 0, 0, 0.5);\n}\n\n::-webkit-scrollbar {\n  display: none;\n}\n";
+var css = ".scroll_container__2ZFIl {\n  width: 300px;\n  box-sizing: border-box;\n  max-width:100%;\n  padding: 5px 10px;\n  margin: auto;\n  background: #ccc;\n  position: relative;\n  overflow: hidden;\n}\n.scroll_content__dfsgC {\n  height: 100%;\n  width: calc(100% + 100px);\n  overflow-y: scroll;\n}\n\n.scroll_content__dfsgC > div {\n  margin-right: 100px;\n}\n\n.scroll_scrollbarContainer__2KZyQ {\n  position: absolute;\n  right: 5px;\n  bottom: 5px;\n  top: 5px;\n  width: 20px;\n}\n\n.scroll_scrollbar__2hZu6 {\n  position: absolute;\n  right: 0;\n  height: 30px;\n  width: 10px;\n  border-radius: 10px;\n  background: rgba(0, 0, 0, 0.5);\n}\n\n::-webkit-scrollbar {\n  display: none;\n}\n";
 var style = {"container":"scroll_container__2ZFIl","content":"scroll_content__dfsgC","scrollbarContainer":"scroll_scrollbarContainer__2KZyQ","scrollbar":"scroll_scrollbar__2hZu6"};
 styleInject(css);
 
@@ -143,10 +143,13 @@ function (_React$Component) {
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "handleScroll", function () {
       var content = _this.content.current;
       var container = _this.container.current;
+      var isScroll = content.scrollHeight > container.clientHeight;
+      var height = container.clientHeight * content.clientHeight / content.scrollHeight;
+      var top = container.clientHeight * content.scrollTop / content.scrollHeight;
 
       _this.setState({
-        height: container.clientHeight * content.clientHeight / content.scrollHeight,
-        top: container.clientHeight * content.scrollTop / content.scrollHeight
+        height: isScroll ? height : 0,
+        top: top
       });
     });
 
@@ -223,7 +226,7 @@ function (_React$Component) {
         className: style.content,
         onScroll: this.handleScroll,
         ref: this.content
-      }, this.props.children));
+      }, createElement("div", null, this.props.children)));
     }
   }]);
 

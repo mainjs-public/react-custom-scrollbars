@@ -34,7 +34,7 @@ var Scroll = require('@mainjs/react-custom-scrollbars').default;
 import React from 'react';
 import { Scroll } from '@mainjs/react-custom-scrollbars';
 
-class MyComponentWithSound extends React.Component {
+class MyComponent extends React.Component {
   render() {
     return <Scroll {...props} />; // Check props in next section
   }

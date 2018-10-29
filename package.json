@@ -1,6 +1,6 @@
 {
   "name": "@mainjs/react-custom-scrollbars",
-  "version": "18.10.2",
+  "version": "18.10.3",
   "description": "Custom scrollbar",
   "main": "dist/index.js",
   "module": "dist/index.es.js",

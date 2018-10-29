@@ -50,10 +50,13 @@ class Scroll extends React.Component<Props, State> {
     const content = this.content.current;
     const container = this.container.current;
 
+    const isScroll = content.scrollHeight > container.clientHeight;
+    const height = (container.clientHeight * content.clientHeight) / content.scrollHeight;
+    const top = (container.clientHeight * content.scrollTop) / content.scrollHeight;
+
     this.setState({
-      height:
-        (container.clientHeight * content.clientHeight) / content.scrollHeight,
-      top: (container.clientHeight * content.scrollTop) / content.scrollHeight
+      height: isScroll ? height : 0,
+      top,
     });
   };
 
@@ -117,7 +120,9 @@ class Scroll extends React.Component<Props, State> {
           />
         </div>
         <div className={style.content} onScroll={this.handleScroll} ref={this.content}>
-          { this.props.children }
+          <div>
+            { this.props.children }
+          </div>
         </div>
       </div>
     );
