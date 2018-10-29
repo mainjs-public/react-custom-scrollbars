@@ -111,7 +111,7 @@ function styleInject(css, ref) {
   }
 }
 
-var css = ".scroll_container__2ZFIl {\n  width: 300px;\n  box-sizing: border-box;\n  max-width:100%;\n  padding: 5px 10px;\n  margin: auto;\n  background: #ccc;\n  position: relative;\n  overflow: hidden;\n}\n.scroll_content__dfsgC {\n  height: 100%;\n  width: calc(100% + 100px);\n  overflow-y: scroll;\n}\n\n.scroll_content__dfsgC > div {\n  margin-right: 100px;\n}\n\n.scroll_scrollbarContainer__2KZyQ {\n  position: absolute;\n  right: 5px;\n  bottom: 5px;\n  top: 5px;\n  width: 20px;\n}\n\n.scroll_scrollbar__2hZu6 {\n  position: absolute;\n  right: 0;\n  height: 30px;\n  width: 10px;\n  border-radius: 10px;\n  background: rgba(0, 0, 0, 0.5);\n}\n\n::-webkit-scrollbar {\n  display: none;\n}\n";
+var css = ".scroll_container__2ZFIl {\n  box-sizing: border-box;\n  max-width:100%;\n  margin: auto;\n  position: relative;\n  overflow: hidden;\n}\n.scroll_content__dfsgC {\n  height: 100%;\n  width: calc(100% + 100px);\n  overflow-y: scroll;\n}\n\n.scroll_content__dfsgC > div {\n  margin-right: 100px;\n}\n\n.scroll_scrollbarContainer__2KZyQ {\n  position: absolute;\n  right: 0px;\n  bottom: 5px;\n  top: 5px;\n}\n\n.scroll_scrollbar__2hZu6 {\n  position: absolute;\n  right: 0;\n  height: 30px;\n  width: 10px;\n  border-radius: 10px;\n  background: rgba(0, 0, 0, 0.2);\n}\n\n::-webkit-scrollbar {\n  display: none;\n}\n";
 var style = {"container":"scroll_container__2ZFIl","content":"scroll_content__dfsgC","scrollbarContainer":"scroll_scrollbarContainer__2KZyQ","scrollbar":"scroll_scrollbar__2hZu6"};
 styleInject(css);
 
@@ -143,7 +143,7 @@ function (_React$Component) {
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "handleScroll", function () {
       var content = _this.content.current;
       var container = _this.container.current;
-      var isScroll = content.scrollHeight > container.clientHeight;
+      var isScroll = content.scrollHeight > 10 + container.clientHeight;
       var height = container.clientHeight * content.clientHeight / content.scrollHeight;
       var top = container.clientHeight * content.scrollTop / content.scrollHeight;
 
@@ -151,6 +151,11 @@ function (_React$Component) {
         height: isScroll ? height : 0,
         top: top
       });
+    });
+
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "isFirefox", function () {
+      if (typeof InstallTrigger !== 'undefined') return true;
+      return false;
     });
 
     _this.content = createRef();
@@ -202,7 +207,14 @@ function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      var heightContainer = this.props.height;
+      var _this$props = this.props,
+          heightContainer = _this$props.height,
+          scrollBorderRadius = _this$props.scrollBorderRadius,
+          scrollColor = _this$props.scrollColor,
+          scrollCursor = _this$props.scrollCursor,
+          scrollDisplay = _this$props.scrollDisplay,
+          scrollWidth = _this$props.scrollWidth,
+          scrollRight = _this$props.scrollRight;
       var _this$state2 = this.state,
           height = _this$state2.height,
           top = _this$state2.top;
@@ -216,17 +228,25 @@ function (_React$Component) {
         ref: this.container
       }, createElement("div", {
         className: style.scrollbar,
+        ref: this.scroll,
+        onMouseDown: this.handleMouseDown,
         style: {
           height: height,
-          top: top
-        },
-        ref: this.scroll,
-        onMouseDown: this.handleMouseDown
+          top: top,
+          right: scrollRight,
+          borderRadius: scrollBorderRadius,
+          backgroundColor: scrollColor,
+          cursor: scrollCursor,
+          display: scrollDisplay,
+          width: scrollWidth
+        }
       })), createElement("div", {
         className: style.content,
         onScroll: this.handleScroll,
         ref: this.content
-      }, createElement("div", null, this.props.children)));
+      }, createElement("div", {
+        className: this.isFirefox() === true ? 'story-list-firefox' : ''
+      }, this.props.children)));
     }
   }]);
 
@@ -234,7 +254,13 @@ function (_React$Component) {
 }(Component);
 
 _defineProperty(Scroll, "defaultProps", {
-  height: 300
+  height: 300,
+  scrollBorderRadius: 5,
+  scrollColor: "rgba(0, 0, 0, 0.2)",
+  scrollCursor: "pointer",
+  scrollDisplay: "block",
+  scrollWidth: 5,
+  scrollRight: 1
 });
 
 export { Scroll };

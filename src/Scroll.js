@@ -17,7 +17,13 @@ type State = {
 
 class Scroll extends React.Component<Props, State> {
   static defaultProps = {
-    height: 300
+    height: 300,
+    scrollBorderRadius: 5,
+    scrollColor: "rgba(0, 0, 0, 0.2)",
+    scrollCursor: "pointer",
+    scrollDisplay: "block",
+    scrollWidth: 5,
+    scrollRight: 1
   };
 
   state = {
@@ -50,15 +56,20 @@ class Scroll extends React.Component<Props, State> {
     const content = this.content.current;
     const container = this.container.current;
 
-    const isScroll = content.scrollHeight > container.clientHeight;
+    const isScroll = content.scrollHeight > ( 10 + container.clientHeight );
     const height = (container.clientHeight * content.clientHeight) / content.scrollHeight;
     const top = (container.clientHeight * content.scrollTop) / content.scrollHeight;
-
     this.setState({
       height: isScroll ? height : 0,
       top,
     });
   };
+
+  isFirefox = () => {
+    if(typeof InstallTrigger !== 'undefined')
+      return true;
+    return false;
+  }
 
   handleMouseDown(e) {
     e.preventDefault();
@@ -106,21 +117,37 @@ class Scroll extends React.Component<Props, State> {
   }
 
   render() {
-    const { height: heightContainer } = this.props;
+    const { 
+      height: heightContainer,
+      scrollBorderRadius,
+      scrollColor,
+      scrollCursor,
+      scrollDisplay,
+      scrollWidth,
+      scrollRight
+    } = this.props;
     const { height, top } = this.state;
-
     return (
       <div className={style.container} style={{ height: heightContainer }}>
         <div className={style.scrollbarContainer} ref={this.container}>
           <div
             className={style.scrollbar}
-            style={{ height, top }}
             ref={this.scroll}
             onMouseDown={this.handleMouseDown}
+            style={{ 
+              height,
+              top,
+              right: scrollRight,
+              borderRadius: scrollBorderRadius,
+              backgroundColor: scrollColor,
+              cursor: scrollCursor,
+              display: scrollDisplay,
+              width: scrollWidth
+            }}
           />
         </div>
         <div className={style.content} onScroll={this.handleScroll} ref={this.content}>
-          <div>
+          <div className={this.isFirefox() === true ? 'story-list-firefox' : ''}>
             { this.props.children }
           </div>
         </div>

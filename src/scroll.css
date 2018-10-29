@@ -1,10 +1,7 @@
 .container {
-  width: 300px;
   box-sizing: border-box;
   max-width:100%;
-  padding: 5px 10px;
   margin: auto;
-  background: #ccc;
   position: relative;
   overflow: hidden;
 }
@@ -20,10 +17,9 @@
 
 .scrollbarContainer {
   position: absolute;
-  right: 5px;
+  right: 0px;
   bottom: 5px;
   top: 5px;
-  width: 20px;
 }
 
 .scrollbar {
@@ -32,7 +28,7 @@
   height: 30px;
   width: 10px;
   border-radius: 10px;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.2);
 }
 
 ::-webkit-scrollbar {
