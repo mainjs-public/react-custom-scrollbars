@@ -44,6 +44,8 @@ class MyComponent extends React.Component {
 ### Props
 
 * *height (number)*: The height of the scroll container.
+* *autoScroll*: Automatically scroll to the last position vs data (object)
+* *data (object)*: the data of the content.
 
 ## How to contribute
 

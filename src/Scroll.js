@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import style from "./scroll.css";
-
+import ReactDOM from 'react-dom';
 type Props = {
   height: number,
   children: React.Node,
@@ -30,7 +30,8 @@ class Scroll extends React.Component<Props, State> {
     top: 0,
     height: 30,
     start: 0,
-    y: 0
+    y: 0,
+    data: this.props.data
   };
 
   content: { current: {} | HTMLDivElement };
@@ -52,11 +53,15 @@ class Scroll extends React.Component<Props, State> {
     this.handleScroll();
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.handleScroll();
+  }
+  
   handleScroll = () => {
     const content = this.content.current;
     const container = this.container.current;
-
     const isScroll = content.scrollHeight > ( 10 + container.clientHeight );
+    
     const height = (container.clientHeight * content.clientHeight) / content.scrollHeight;
     const top = (container.clientHeight * content.scrollTop) / content.scrollHeight;
     this.setState({
@@ -111,38 +116,57 @@ class Scroll extends React.Component<Props, State> {
     this.setState({
       top
     });
-
+    
     content.scrollTop =
       (content.scrollHeight * scroll.offsetTop) / container.clientHeight;
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if(prevProps.data && prevState.data && Object.keys(prevProps.data).length !== Object.keys(prevState.data).length && this.props.autoScroll) {
+      const content = this.content.current;
+      this.setState({
+        data: prevProps.data
+      }, ()=> {
+        content.scrollTop = content.scrollHeight;
+      })
+      
+    }
+  }
+
   render() {
+    const { height, top } = this.state;
     const { 
       height: heightContainer,
       scrollBorderRadius,
       scrollColor,
       scrollCursor,
-      scrollDisplay,
       scrollWidth,
-      scrollRight
+      scrollRight,
+      style : styleScroll,
+      ...prop
     } = this.props;
-    const { height, top } = this.state;
+
+    const containerStyle= {
+      borderRadius: scrollBorderRadius ,
+      color: scrollColor,
+      cursor: scrollCursor,
+      width: scrollWidth,
+      right: scrollRight,
+      ...styleScroll,
+      height,
+      top
+    }
+
+
     return (
-      <div className={style.container} style={{ height: heightContainer }}>
+      <div  className={style.container} style={{ height: styleScroll.height ? styleScroll.height : heightContainer }}>
         <div className={style.scrollbarContainer} ref={this.container}>
           <div
             className={style.scrollbar}
             ref={this.scroll}
             onMouseDown={this.handleMouseDown}
-            style={{ 
-              height,
-              top,
-              right: scrollRight,
-              borderRadius: scrollBorderRadius,
-              backgroundColor: scrollColor,
-              cursor: scrollCursor,
-              display: scrollDisplay,
-              width: scrollWidth
+            style={{
+              ...containerStyle
             }}
           />
         </div>

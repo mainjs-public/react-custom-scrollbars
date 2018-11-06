@@ -3,6 +3,7 @@
 Object.defineProperty(exports, '__esModule', { value: true });
 
 var React = require('react');
+require('react-dom');
 
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
@@ -41,6 +42,25 @@ function _defineProperty(obj, key, value) {
   return obj;
 }
 
+function _objectSpread(target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i] != null ? arguments[i] : {};
+    var ownKeys = Object.keys(source);
+
+    if (typeof Object.getOwnPropertySymbols === 'function') {
+      ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {
+        return Object.getOwnPropertyDescriptor(source, sym).enumerable;
+      }));
+    }
+
+    ownKeys.forEach(function (key) {
+      _defineProperty(target, key, source[key]);
+    });
+  }
+
+  return target;
+}
+
 function _inherits(subClass, superClass) {
   if (typeof superClass !== "function" && superClass !== null) {
     throw new TypeError("Super expression must either be null or a function");
@@ -70,6 +90,42 @@ function _setPrototypeOf(o, p) {
   };
 
   return _setPrototypeOf(o, p);
+}
+
+function _objectWithoutPropertiesLoose(source, excluded) {
+  if (source == null) return {};
+  var target = {};
+  var sourceKeys = Object.keys(source);
+  var key, i;
+
+  for (i = 0; i < sourceKeys.length; i++) {
+    key = sourceKeys[i];
+    if (excluded.indexOf(key) >= 0) continue;
+    target[key] = source[key];
+  }
+
+  return target;
+}
+
+function _objectWithoutProperties(source, excluded) {
+  if (source == null) return {};
+
+  var target = _objectWithoutPropertiesLoose(source, excluded);
+
+  var key, i;
+
+  if (Object.getOwnPropertySymbols) {
+    var sourceSymbolKeys = Object.getOwnPropertySymbols(source);
+
+    for (i = 0; i < sourceSymbolKeys.length; i++) {
+      key = sourceSymbolKeys[i];
+      if (excluded.indexOf(key) >= 0) continue;
+      if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue;
+      target[key] = source[key];
+    }
+  }
+
+  return target;
 }
 
 function _assertThisInitialized(self) {
@@ -135,7 +191,8 @@ function (_React$Component) {
       top: 0,
       height: 30,
       start: 0,
-      y: 0
+      y: 0,
+      data: _this.props.data
     });
 
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "content", void 0);
@@ -176,6 +233,11 @@ function (_React$Component) {
       this.handleScroll();
     }
   }, {
+    key: "componentWillReceiveProps",
+    value: function componentWillReceiveProps(nextProps) {
+      this.handleScroll();
+    }
+  }, {
     key: "handleMouseDown",
     value: function handleMouseDown(e) {
       var _this2 = this;
@@ -209,23 +271,49 @@ function (_React$Component) {
       content.scrollTop = content.scrollHeight * scroll.offsetTop / container.clientHeight;
     }
   }, {
+    key: "componentDidUpdate",
+    value: function componentDidUpdate(prevProps, prevState) {
+      if (prevProps.data && prevState.data && Object.keys(prevProps.data).length !== Object.keys(prevState.data).length && this.props.autoScroll) {
+        var content = this.content.current;
+        this.setState({
+          data: prevProps.data
+        }, function () {
+          content.scrollTop = content.scrollHeight;
+        });
+      }
+    }
+  }, {
     key: "render",
     value: function render() {
+      var _this$state2 = this.state,
+          height = _this$state2.height,
+          top = _this$state2.top;
+
       var _this$props = this.props,
           heightContainer = _this$props.height,
           scrollBorderRadius = _this$props.scrollBorderRadius,
           scrollColor = _this$props.scrollColor,
           scrollCursor = _this$props.scrollCursor,
-          scrollDisplay = _this$props.scrollDisplay,
           scrollWidth = _this$props.scrollWidth,
-          scrollRight = _this$props.scrollRight;
-      var _this$state2 = this.state,
-          height = _this$state2.height,
-          top = _this$state2.top;
+          scrollRight = _this$props.scrollRight,
+          styleScroll = _this$props.style,
+          prop = _objectWithoutProperties(_this$props, ["height", "scrollBorderRadius", "scrollColor", "scrollCursor", "scrollWidth", "scrollRight", "style"]);
+
+      var containerStyle = _objectSpread({
+        borderRadius: scrollBorderRadius,
+        color: scrollColor,
+        cursor: scrollCursor,
+        width: scrollWidth,
+        right: scrollRight
+      }, styleScroll, {
+        height: height,
+        top: top
+      });
+
       return React.createElement("div", {
         className: style.container,
         style: {
-          height: heightContainer
+          height: styleScroll.height ? styleScroll.height : heightContainer
         }
       }, React.createElement("div", {
         className: style.scrollbarContainer,
@@ -234,16 +322,7 @@ function (_React$Component) {
         className: style.scrollbar,
         ref: this.scroll,
         onMouseDown: this.handleMouseDown,
-        style: {
-          height: height,
-          top: top,
-          right: scrollRight,
-          borderRadius: scrollBorderRadius,
-          backgroundColor: scrollColor,
-          cursor: scrollCursor,
-          display: scrollDisplay,
-          width: scrollWidth
-        }
+        style: _objectSpread({}, containerStyle)
       })), React.createElement("div", {
         className: style.content,
         onScroll: this.handleScroll,
