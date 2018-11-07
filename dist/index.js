@@ -3,6 +3,7 @@
 Object.defineProperty(exports, '__esModule', { value: true });
 
 var React = require('react');
+require('react-dom');
 
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
@@ -41,6 +42,25 @@ function _defineProperty(obj, key, value) {
   return obj;
 }
 
+function _objectSpread(target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i] != null ? arguments[i] : {};
+    var ownKeys = Object.keys(source);
+
+    if (typeof Object.getOwnPropertySymbols === 'function') {
+      ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {
+        return Object.getOwnPropertyDescriptor(source, sym).enumerable;
+      }));
+    }
+
+    ownKeys.forEach(function (key) {
+      _defineProperty(target, key, source[key]);
+    });
+  }
+
+  return target;
+}
+
 function _inherits(subClass, superClass) {
   if (typeof superClass !== "function" && superClass !== null) {
     throw new TypeError("Super expression must either be null or a function");
@@ -70,6 +90,42 @@ function _setPrototypeOf(o, p) {
   };
 
   return _setPrototypeOf(o, p);
+}
+
+function _objectWithoutPropertiesLoose(source, excluded) {
+  if (source == null) return {};
+  var target = {};
+  var sourceKeys = Object.keys(source);
+  var key, i;
+
+  for (i = 0; i < sourceKeys.length; i++) {
+    key = sourceKeys[i];
+    if (excluded.indexOf(key) >= 0) continue;
+    target[key] = source[key];
+  }
+
+  return target;
+}
+
+function _objectWithoutProperties(source, excluded) {
+  if (source == null) return {};
+
+  var target = _objectWithoutPropertiesLoose(source, excluded);
+
+  var key, i;
+
+  if (Object.getOwnPropertySymbols) {
+    var sourceSymbolKeys = Object.getOwnPropertySymbols(source);
+
+    for (i = 0; i < sourceSymbolKeys.length; i++) {
+      key = sourceSymbolKeys[i];
+      if (excluded.indexOf(key) >= 0) continue;
+      if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue;
+      target[key] = source[key];
+    }
+  }
+
+  return target;
 }
 
 function _assertThisInitialized(self) {
@@ -115,7 +171,7 @@ function styleInject(css, ref) {
   }
 }
 
-var css = ".scroll_container__2ZFIl {\n  width: 300px;\n  box-sizing: border-box;\n  max-width:100%;\n  padding: 5px 10px;\n  margin: auto;\n  background: #ccc;\n  position: relative;\n  overflow: hidden;\n}\n.scroll_content__dfsgC {\n  height: 100%;\n  width: calc(100% + 100px);\n  overflow-y: scroll;\n}\n\n.scroll_content__dfsgC > div {\n  margin-right: 100px;\n}\n\n.scroll_scrollbarContainer__2KZyQ {\n  position: absolute;\n  right: 5px;\n  bottom: 5px;\n  top: 5px;\n  width: 20px;\n}\n\n.scroll_scrollbar__2hZu6 {\n  position: absolute;\n  right: 0;\n  height: 30px;\n  width: 10px;\n  border-radius: 10px;\n  background: rgba(0, 0, 0, 0.5);\n}\n\n::-webkit-scrollbar {\n  display: none;\n}\n";
+var css = ".scroll_container__2ZFIl {\n  box-sizing: border-box;\n  max-width:100%;\n  margin: auto;\n  position: relative;\n  overflow: hidden;\n}\n.scroll_content__dfsgC {\n  height: 100%;\n  width: calc(100% + 100px);\n  overflow-y: scroll;\n}\n\n.scroll_content__dfsgC > div {\n  margin-right: 100px;\n}\n\n.scroll_scrollbarContainer__2KZyQ {\n  position: absolute;\n  right: 0px;\n  bottom: 5px;\n  top: 5px;\n}\n\n.scroll_scrollbar__2hZu6 {\n  position: absolute;\n  right: 0;\n  height: 30px;\n  width: 10px;\n  border-radius: 10px;\n  background: rgba(0, 0, 0, 0.2);\n}\n\n::-webkit-scrollbar {\n  display: none;\n}\n";
 var style = {"container":"scroll_container__2ZFIl","content":"scroll_content__dfsgC","scrollbarContainer":"scroll_scrollbarContainer__2KZyQ","scrollbar":"scroll_scrollbar__2hZu6"};
 styleInject(css);
 
@@ -135,7 +191,8 @@ function (_React$Component) {
       top: 0,
       height: 30,
       start: 0,
-      y: 0
+      y: 0,
+      data: _this.props.data
     });
 
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "content", void 0);
@@ -147,7 +204,7 @@ function (_React$Component) {
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "handleScroll", function () {
       var content = _this.content.current;
       var container = _this.container.current;
-      var isScroll = content.scrollHeight > container.clientHeight;
+      var isScroll = content.scrollHeight > 10 + container.clientHeight;
       var height = container.clientHeight * content.clientHeight / content.scrollHeight;
       var top = container.clientHeight * content.scrollTop / content.scrollHeight;
 
@@ -155,6 +212,11 @@ function (_React$Component) {
         height: isScroll ? height : 0,
         top: top
       });
+    });
+
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "isFirefox", function () {
+      if (typeof InstallTrigger !== 'undefined') return true;
+      return false;
     });
 
     _this.content = React.createRef();
@@ -168,6 +230,11 @@ function (_React$Component) {
   _createClass(Scroll, [{
     key: "componentDidMount",
     value: function componentDidMount() {
+      this.handleScroll();
+    }
+  }, {
+    key: "componentWillReceiveProps",
+    value: function componentWillReceiveProps(nextProps) {
       this.handleScroll();
     }
   }, {
@@ -204,33 +271,65 @@ function (_React$Component) {
       content.scrollTop = content.scrollHeight * scroll.offsetTop / container.clientHeight;
     }
   }, {
+    key: "componentDidUpdate",
+    value: function componentDidUpdate(prevProps, prevState) {
+      if (prevProps.data && prevState.data && Object.keys(prevProps.data).length !== Object.keys(prevState.data).length && this.props.autoScroll) {
+        var content = this.content.current;
+        this.setState({
+          data: prevProps.data
+        }, function () {
+          content.scrollTop = content.scrollHeight;
+        });
+      }
+    }
+  }, {
     key: "render",
     value: function render() {
-      var heightContainer = this.props.height;
       var _this$state2 = this.state,
           height = _this$state2.height,
           top = _this$state2.top;
+
+      var _this$props = this.props,
+          heightContainer = _this$props.height,
+          scrollBorderRadius = _this$props.scrollBorderRadius,
+          scrollColor = _this$props.scrollColor,
+          scrollCursor = _this$props.scrollCursor,
+          scrollWidth = _this$props.scrollWidth,
+          scrollRight = _this$props.scrollRight,
+          styleScroll = _this$props.style,
+          prop = _objectWithoutProperties(_this$props, ["height", "scrollBorderRadius", "scrollColor", "scrollCursor", "scrollWidth", "scrollRight", "style"]);
+
+      var containerStyle = _objectSpread({
+        borderRadius: scrollBorderRadius,
+        color: scrollColor,
+        cursor: scrollCursor,
+        width: scrollWidth,
+        right: scrollRight
+      }, styleScroll, {
+        height: height,
+        top: top
+      });
+
       return React.createElement("div", {
         className: style.container,
         style: {
-          height: heightContainer
+          height: styleScroll.height ? styleScroll.height : heightContainer
         }
       }, React.createElement("div", {
         className: style.scrollbarContainer,
         ref: this.container
       }, React.createElement("div", {
         className: style.scrollbar,
-        style: {
-          height: height,
-          top: top
-        },
         ref: this.scroll,
-        onMouseDown: this.handleMouseDown
+        onMouseDown: this.handleMouseDown,
+        style: _objectSpread({}, containerStyle)
       })), React.createElement("div", {
         className: style.content,
         onScroll: this.handleScroll,
         ref: this.content
-      }, React.createElement("div", null, this.props.children)));
+      }, React.createElement("div", {
+        className: this.isFirefox() === true ? 'story-list-firefox' : ''
+      }, this.props.children)));
     }
   }]);
 
@@ -238,7 +337,13 @@ function (_React$Component) {
 }(React.Component);
 
 _defineProperty(Scroll, "defaultProps", {
-  height: 300
+  height: 300,
+  scrollBorderRadius: 5,
+  scrollColor: "rgba(0, 0, 0, 0.2)",
+  scrollCursor: "pointer",
+  scrollDisplay: "block",
+  scrollWidth: 5,
+  scrollRight: 1
 });
 
 exports.Scroll = Scroll;
