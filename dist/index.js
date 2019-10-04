@@ -3,7 +3,6 @@
 Object.defineProperty(exports, '__esModule', { value: true });
 
 var React = require('react');
-require('react-dom');
 
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
@@ -42,20 +41,35 @@ function _defineProperty(obj, key, value) {
   return obj;
 }
 
-function _objectSpread(target) {
+function ownKeys(object, enumerableOnly) {
+  var keys = Object.keys(object);
+
+  if (Object.getOwnPropertySymbols) {
+    var symbols = Object.getOwnPropertySymbols(object);
+    if (enumerableOnly) symbols = symbols.filter(function (sym) {
+      return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+    });
+    keys.push.apply(keys, symbols);
+  }
+
+  return keys;
+}
+
+function _objectSpread2(target) {
   for (var i = 1; i < arguments.length; i++) {
     var source = arguments[i] != null ? arguments[i] : {};
-    var ownKeys = Object.keys(source);
 
-    if (typeof Object.getOwnPropertySymbols === 'function') {
-      ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {
-        return Object.getOwnPropertyDescriptor(source, sym).enumerable;
-      }));
+    if (i % 2) {
+      ownKeys(source, true).forEach(function (key) {
+        _defineProperty(target, key, source[key]);
+      });
+    } else if (Object.getOwnPropertyDescriptors) {
+      Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+    } else {
+      ownKeys(source).forEach(function (key) {
+        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+      });
     }
-
-    ownKeys.forEach(function (key) {
-      _defineProperty(target, key, source[key]);
-    });
   }
 
   return target;
@@ -187,7 +201,7 @@ function (_React$Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Scroll).call(this, props));
 
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "state", {
+    _defineProperty(_assertThisInitialized(_this), "state", {
       top: 0,
       height: 30,
       start: 0,
@@ -195,13 +209,13 @@ function (_React$Component) {
       data: _this.props.data
     });
 
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "content", void 0);
+    _defineProperty(_assertThisInitialized(_this), "content", void 0);
 
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "container", void 0);
+    _defineProperty(_assertThisInitialized(_this), "container", void 0);
 
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "scroll", void 0);
+    _defineProperty(_assertThisInitialized(_this), "scroll", void 0);
 
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "handleScroll", function () {
+    _defineProperty(_assertThisInitialized(_this), "handleScroll", function () {
       var content = _this.content.current;
       var container = _this.container.current;
       var isScroll = content.scrollHeight > 10 + container.clientHeight;
@@ -214,7 +228,7 @@ function (_React$Component) {
       });
     });
 
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "isFirefox", function () {
+    _defineProperty(_assertThisInitialized(_this), "isFirefox", function () {
       if (typeof InstallTrigger !== 'undefined') return true;
       return false;
     });
@@ -222,8 +236,8 @@ function (_React$Component) {
     _this.content = React.createRef();
     _this.container = React.createRef();
     _this.scroll = React.createRef();
-    _this.onMove = _this.onMove.bind(_assertThisInitialized(_assertThisInitialized(_this)));
-    _this.handleMouseDown = _this.handleMouseDown.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    _this.onMove = _this.onMove.bind(_assertThisInitialized(_this));
+    _this.handleMouseDown = _this.handleMouseDown.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -299,7 +313,7 @@ function (_React$Component) {
           styleScroll = _this$props.style,
           prop = _objectWithoutProperties(_this$props, ["height", "scrollBorderRadius", "scrollColor", "scrollCursor", "scrollWidth", "scrollRight", "style"]);
 
-      var containerStyle = _objectSpread({
+      var containerStyle = _objectSpread2({
         borderRadius: scrollBorderRadius,
         color: scrollColor,
         cursor: scrollCursor,
@@ -322,7 +336,7 @@ function (_React$Component) {
         className: style.scrollbar,
         ref: this.scroll,
         onMouseDown: this.handleMouseDown,
-        style: _objectSpread({}, containerStyle)
+        style: _objectSpread2({}, containerStyle)
       })), React.createElement("div", {
         className: style.content,
         onScroll: this.handleScroll,

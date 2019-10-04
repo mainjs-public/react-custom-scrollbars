@@ -1,6 +1,6 @@
 {
   "name": "@mainjs/react-custom-scrollbars",
-  "version": "18.10.5",
+  "version": "19.04.10",
   "description": "Custom scrollbar",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
@@ -26,30 +26,30 @@
   },
   "homepage": "https://github.com/mainjs-public/react-custom-scrollbars#readme",
   "devDependencies": {
-    "@babel/core": "^7.1.2",
-    "@babel/plugin-proposal-class-properties": "^7.1.0",
-    "@babel/preset-env": "^7.1.0",
+    "@babel/core": "^7.6.2",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/preset-env": "^7.6.2",
     "@babel/preset-flow": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
     "flow": "^0.2.3",
-    "flow-bin": "^0.84.0",
-    "node-sass": "^4.9.4",
-    "rollup": "^0.66.6",
-    "rollup-plugin-babel": "^4.0.3",
-    "rollup-plugin-commonjs": "^9.2.0",
+    "flow-bin": "^0.109.0",
+    "node-sass": "^4.12.0",
+    "rollup": "^1.23.0",
+    "rollup-plugin-babel": "^4.3.3",
+    "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-img": "^1.1.0",
-    "rollup-plugin-node-resolve": "^3.4.0",
-    "rollup-plugin-postcss": "^1.6.2"
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-postcss": "^2.0.3"
   },
   "peerDependencies": {
-    "react": "^16.6.0",
-    "react-dom": "^16.6.0"
+    "react": "^16.10.2",
+    "react-dom": "^16.10.2"
   },
   "files": [
     "dist"
   ],
   "dependencies": {
-    "react": "^16.6.0",
-    "react-dom": "^16.6.0"
+    "react": "^16.10.2",
+    "react-dom": "^16.10.2"
   }
 }

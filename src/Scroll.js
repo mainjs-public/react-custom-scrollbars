@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import style from "./scroll.css";
-import ReactDOM from 'react-dom';
+
 type Props = {
   height: number,
   children: React.Node,
